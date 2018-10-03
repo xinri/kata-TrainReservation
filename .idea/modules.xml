@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/TrainTrain.iml" filepath="$PROJECT_DIR$/TrainTrain.iml" />
       <module fileurl="file://$PROJECT_DIR$/TrainTrainApi/TrainTrainApi.iml" filepath="$PROJECT_DIR$/TrainTrainApi/TrainTrainApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/TrainTrainCore/TrainTrainCore.iml" filepath="$PROJECT_DIR$/TrainTrainCore/TrainTrainCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TrainTrainDal/TrainTrainDal.iml" filepath="$PROJECT_DIR$/TrainTrainDal/TrainTrainDal.iml" />
     </modules>
   </component>
 </project>

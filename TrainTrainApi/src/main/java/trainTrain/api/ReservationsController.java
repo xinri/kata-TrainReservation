@@ -16,7 +16,7 @@ public class ReservationsController {
         return webTicketManager.reserve(requestDto.train_id, requestDto.number_of_seats);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "api.value")
+    @RequestMapping(method = RequestMethod.GET, value = "api/value")
     public String get(String value) {
         return value;
     }

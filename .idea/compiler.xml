@@ -9,6 +9,7 @@
         <module name="TrainTrainApi" />
         <module name="TrainTrainCore" />
         <module name="TrainTrainCore (1)" />
+        <module name="TrainTrainDal" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -16,6 +17,7 @@
       <module name="TrainTrainApi" target="1.8" />
       <module name="TrainTrainCore" target="1.5" />
       <module name="TrainTrainCore (1)" target="1.5" />
+      <module name="TrainTrainDal" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
