@@ -1,16 +1,21 @@
 package com.cache;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TrainCaching implements ITrainCaching {
-
+    List<SeatEntity> seats = new ArrayList<>();
     @Override
-    public void Clear() {
-
+    public void Clear() throws InterruptedException {
+        seats.clear();
+        Thread.sleep(500);
     }
 
     @Override
-    public void Save(String trainId, String bookingReference) {
-
+    public void Save(List<SeatEntity> seatEntities) throws InterruptedException {
+        seats.addAll(seatEntities);
+        Thread.sleep(500);
     }
 }
 

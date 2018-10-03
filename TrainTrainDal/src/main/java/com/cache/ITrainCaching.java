@@ -1,7 +1,9 @@
 package com.cache;
 
-public interface ITrainCaching {
-    void Clear();
+import java.util.List;
 
-    void Save(String trainId, String bookingReference) throws InterruptedException;
+public interface ITrainCaching {
+    void Clear() throws InterruptedException;
+
+    void Save(List<SeatEntity> seatEntities) throws InterruptedException;
 }

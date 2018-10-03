@@ -6,40 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.cache.ITrainCaching;
+import com.cache.SeatEntity;
 import com.cache.TrainCaching;
 
 public class WebTicketManager {
-    private final String uriBookingReferenceService = "http://localhost:51691/";
-    private final String urITrainDataService = "http://localhost:50680/";
-    private ITrainCaching _trainCaching;
+    private final String uriBookingReferenceService = "http://localhost:51691";
+    private final String urITrainDataService = "http://localhost:50680";
+    private ITrainCaching trainCaching;
 
-    public WebTicketManager() {
-        ITrainCaching trainCaching = new TrainCaching();
+    public WebTicketManager() throws InterruptedException {
+        trainCaching = new TrainCaching();
         trainCaching.Clear();
-    }
-
-    private static String buildPostContent(String trainId, String booking_ref, List<Seat> availableSeats) {
-        StringBuilder seats = new StringBuilder("[");
-
-        boolean firstTime = true;
-
-        for (Seat seat : availableSeats) {
-            if (!firstTime) {
-                seats.append(", ");
-            } else {
-                firstTime = false;
-            }
-
-            seats.append(String.format("\"%d%s\"", seat.getSeatNumber(), seat.getCoachName()));
-        }
-
-        seats.append("]");
-
-        String result = String.format(
-                "{{\r\n\t\"train_id\": \"%s\",\r\n\t\"seats\": %s,\r\n\t\"booking_reference\": \"%S\"\r\n}}",
-                trainId, seats.toString(), booking_ref);
-
-        return result;
     }
 
     public String reserve(String train, int seats) throws IOException, InterruptedException {
@@ -89,7 +66,8 @@ public class WebTicketManager {
             }
 
             if (numberOfReserv == seats) {
-                _trainCaching.Save(train, bookingRef);
+
+                trainCache(train, availableSeats, bookingRef);
 
                 if (reservedSets == 0) {
                     String output = String.format("Reserved seat(s): ", reservedSets);
@@ -101,7 +79,7 @@ public class WebTicketManager {
                 String postContent = buildPostContent(train, bookingRef, availableSeats);
 
                 Client client = ClientBuilder.newClient();
-                WebTarget webTarget = client.target(urITrainDataService + "reserve");
+                WebTarget webTarget = client.target(urITrainDataService + "/reserve/");
                 Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON_TYPE);
                 request.post(Entity.text(postContent));
 
@@ -114,6 +92,38 @@ public class WebTicketManager {
 
         }
         return String.format("{{\"train_id\": \"%s\", \"booking_reference\": \"\", \"seats\": []}}", train);
+    }
+
+    private void trainCache(String train, List<Seat> availableSeats, String bookingRef) throws InterruptedException {
+        List<SeatEntity> seatEntities = new ArrayList<SeatEntity>();
+        for (Seat seat : availableSeats) {
+            seatEntities.add(new SeatEntity(train, bookingRef, seat.getCoachName(), seat.getSeatNumber()));
+        }
+        this.trainCaching.Save(seatEntities);
+    }
+
+    private static String buildPostContent(String trainId, String booking_ref, List<Seat> availableSeats) {
+        StringBuilder seats = new StringBuilder("[");
+
+        boolean firstTime = true;
+
+        for (Seat seat : availableSeats) {
+            if (!firstTime) {
+                seats.append(", ");
+            } else {
+                firstTime = false;
+            }
+
+            seats.append(String.format("\"%d%s\"", seat.getSeatNumber(), seat.getCoachName()));
+        }
+
+        seats.append("]");
+
+        String result = String.format(
+                "{{\r\n\t\"train_id\": \"%s\",\r\n\t\"seats\": %s,\r\n\t\"booking_reference\": \"%S\"\r\n}}",
+                trainId, seats.toString(), booking_ref);
+
+        return result;
     }
 
     private String dumpSeats(List<Seat> seats) {
@@ -141,7 +151,7 @@ public class WebTicketManager {
 
         Client client = ClientBuilder.newClient();
 
-        WebTarget target = client.target(urITrainDataService + "api/data_for_train/");
+        WebTarget target = client.target(urITrainDataService + "/api/data_for_train/");
         WebTarget path = target.path(String.valueOf(train));
         Invocation.Builder request = path.request(MediaType.APPLICATION_JSON);
         JsonTrainTopology = request.get(String.class);
@@ -152,7 +162,7 @@ public class WebTicketManager {
     protected String getBookRef(Client client) {
         String booking_ref;
 
-        WebTarget target = client.target(uriBookingReferenceService + "booking_reference");
+        WebTarget target = client.target(uriBookingReferenceService + "/booking_reference/");
         booking_ref = target.request(MediaType.APPLICATION_JSON).get(String.class);
 
         return booking_ref;
