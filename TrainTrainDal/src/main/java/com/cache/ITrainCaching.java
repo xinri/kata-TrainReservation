@@ -1,9 +1,7 @@
-package com.traintrain;
+package com.cache;
 
 public interface ITrainCaching {
     void Clear();
 
-    void Save(String trainId, Train train, String bookingReference) throws InterruptedException;
-
-    void Save(TrainEntity trainEntity) throws InterruptedException;
+    void Save(String trainId, String bookingReference) throws InterruptedException;
 }

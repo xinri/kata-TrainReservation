@@ -1,4 +1,4 @@
-package com.traintrain;
+package com.cache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class TrainEntity {
 
     private final String trainId;
-    public List<Seat> Seats = new ArrayList<Seat>();
+    public List<SeatEntity> Seats = new ArrayList<SeatEntity>();
 
     public TrainEntity(String trainId) {
 

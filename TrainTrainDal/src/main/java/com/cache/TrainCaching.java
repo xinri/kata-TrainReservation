@@ -1,27 +1,21 @@
-package com.traintrain;
+package com.cache;
+
 
 public class TrainCaching implements ITrainCaching {
-    TrainEntity trainEntity;
 
+    @Override
     public void Clear() {
-        if (trainEntity != null) trainEntity.Seats.clear();
+
     }
 
-    public void Save(String trainId, Train train, String bookingReference) throws InterruptedException {
-        trainEntity = new TrainEntity(trainId);
-        for (Seat seat : train.Seats) {
-            trainEntity.Seats.add(new SeatEntity(trainId, bookingReference, seat.getCoachName(), seat.getSeatNumber()));
-        }
-        Factory.Create().Save(trainEntity);
-    }
+    @Override
+    public void Save(String trainId, String bookingReference) {
 
-    public void Save(TrainEntity trainEntity) throws InterruptedException {
-        Thread.sleep(500);
     }
 }
 
 final class Factory {
-    public static ITrainCaching Create() {
+    public static ITrainCaching create() {
         return new TrainCaching();
     }
 }

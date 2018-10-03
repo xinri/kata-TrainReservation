@@ -5,7 +5,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.cache.ITrainCaching;
+import com.cache.TrainCaching;
 
 public class WebTicketManager {
     private final String uriBookingReferenceService = "http://localhost:51691/";
@@ -88,7 +89,7 @@ public class WebTicketManager {
             }
 
             if (numberOfReserv == seats) {
-                _trainCaching.Save(train, trainInst, bookingRef);
+                _trainCaching.Save(train, bookingRef);
 
                 if (reservedSets == 0) {
                     String output = String.format("Reserved seat(s): ", reservedSets);

@@ -1,10 +1,8 @@
-package com.traintrain;
+package com.cache;
 
-public class SeatEntity extends Seat {
-    private final String trainId;
+public class SeatEntity {
 
     public SeatEntity(String trainId, String bookingReference, String coachName, int seatNumber) {
-        super(coachName, seatNumber, bookingReference);
-        this.trainId = trainId;
+
     }
 }
