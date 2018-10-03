@@ -13,8 +13,6 @@ public class ReservationsController {
 
     @RequestMapping(method = RequestMethod.POST, value = "api/reservations")
     public String update(@RequestBody RequestDto requestDto) throws IOException, InterruptedException {
-        System.out.println(requestDto.getTrain_id());
-        System.out.println(requestDto.getNumber_of_seats());
         WebTicketManager webTicketManager = new WebTicketManager();
         return webTicketManager.reserve(requestDto.getTrain_id(), requestDto.getNumber_of_seats());
     }
