@@ -67,7 +67,7 @@ public class WebTicketManager {
 
             if (numberOfReserv == seats) {
 
-                trainCache(train, availableSeats, bookingRef);
+                this.trainCaching.Save(toSeatsEntities(train, availableSeats, bookingRef);
 
                 if (reservedSets == 0) {
                     String output = String.format("Reserved seat(s): ", reservedSets);
@@ -92,14 +92,6 @@ public class WebTicketManager {
 
         }
         return String.format("{{\"train_id\": \"%s\", \"booking_reference\": \"\", \"seats\": []}}", train);
-    }
-
-    private void trainCache(String train, List<Seat> availableSeats, String bookingRef) throws InterruptedException {
-        List<SeatEntity> seatEntities = new ArrayList<SeatEntity>();
-        for (Seat seat : availableSeats) {
-            seatEntities.add(new SeatEntity(train, bookingRef, seat.getCoachName(), seat.getSeatNumber()));
-        }
-        this.trainCaching.Save(seatEntities);
     }
 
     private static String buildPostContent(String trainId, String booking_ref, List<Seat> availableSeats) {
@@ -166,5 +158,13 @@ public class WebTicketManager {
         booking_ref = target.request(MediaType.APPLICATION_JSON).get(String.class);
 
         return booking_ref;
+    }
+
+    private List<SeatEntity> toSeatsEntities(String train, List<Seat> availableSeats, String bookingRef) throws InterruptedException {
+        List<SeatEntity> seatEntities = new ArrayList<SeatEntity>();
+        for (Seat seat : availableSeats) {
+            seatEntities.add(new SeatEntity(train, bookingRef, seat.getCoachName(), seat.getSeatNumber()));
+        }
+        return seatEntities;
     }
 }
