@@ -67,7 +67,7 @@ public class WebTicketManager {
 
             if (numberOfReserv == seats) {
 
-                this.trainCaching.Save(toSeatsEntities(train, availableSeats, bookingRef);
+                this.trainCaching.Save(toSeatsEntities(train, availableSeats, bookingRef));
 
                 if (reservedSets == 0) {
                     String output = String.format("Reserved seat(s): ", reservedSets);
