@@ -41,12 +41,37 @@ public class TrainDataServiceAdapter implements IProvideTrainTopology {
     return seats;
   }
 
+  static String buildPostContent(ReservationAttempt reservationAttempt) {
+    StringBuilder seats = new StringBuilder("[");
+
+    boolean firstTime = true;
+
+    for (Seat seat : reservationAttempt.getSeats()) {
+      if (!firstTime) {
+        seats.append(", ");
+      } else {
+        firstTime = false;
+      }
+
+      seats.append(String.format("\"%d%s\"", seat.getSeatNumber(), seat.getCoachName()));
+    }
+
+    seats.append("]");
+
+    String result = String.format(
+        "{{\r\n\t\"train_id\": \"%s\",\r\n\t\"seats\": %s,\r\n\t\"booking_reference\": \"%S\"\r\n}}",
+        reservationAttempt.getTrainId(), seats.toString(), reservationAttempt.getBookingRef());
+
+    return result;
+  }
+
   @Override
-  public void sendReservation(String postContent) {
+  public void sendReservation(ReservationAttempt reservationAttempt) {
     Client client = ClientBuilder.newClient();
     try {
       WebTarget webTarget = client.target(uriTrainDataService + "/reserve/");
       Builder request = webTarget.request(MediaType.APPLICATION_JSON_TYPE);
+      String postContent = buildPostContent(reservationAttempt);
       request.post(Entity.text(postContent));
     } finally {
       client.close();
@@ -54,7 +79,7 @@ public class TrainDataServiceAdapter implements IProvideTrainTopology {
   }
 
   @Override
-  public Train getTrain(String trainId) throws IOException {
+  public Train getTrain(TrainId trainId) throws IOException {
     String JsonTrainTopology;
     Client client = ClientBuilder.newClient();
     try {
@@ -66,6 +91,6 @@ public class TrainDataServiceAdapter implements IProvideTrainTopology {
       client.close();
     }
     List<Seat> seats = adaptTrainTopology(JsonTrainTopology);
-    return new Train(seats);
+    return new Train(trainId, seats);
   }
 }

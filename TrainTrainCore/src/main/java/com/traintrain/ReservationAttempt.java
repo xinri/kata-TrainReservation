@@ -8,10 +8,13 @@ import java.util.List;
  */
 public class ReservationAttempt {
 
+  private TrainId trainId;
   private final List<Seat> seats;
-  private final int seatRequestedCount;
+  private final SeatRequestCount seatRequestedCount;
+  private String bookingRef;
 
-  public ReservationAttempt(List<Seat> seats, int seatRequestedCount) {
+  public ReservationAttempt(TrainId trainId, List<Seat> seats, SeatRequestCount seatRequestedCount) {
+    this.trainId = trainId;
     this.seats = seats;
     this.seatRequestedCount = seatRequestedCount;
   }
@@ -21,6 +24,25 @@ public class ReservationAttempt {
   }
 
   boolean isFulfilled() {
-    return this.seatRequestedCount == getSeats().size();
+    return this.seatRequestedCount.getSeatCount() == getSeats().size();
+  }
+
+  void assignBookingReference(String bookingRef) {
+    this.bookingRef = bookingRef;
+    for (Seat availableSeat : getSeats()) {
+      availableSeat.setBookingRef(bookingRef);
+    }
+  }
+
+  public String getBookingRef() {
+    return bookingRef;
+  }
+
+  public TrainId getTrainId() {
+    return trainId;
+  }
+
+  public Reservation confirm() {
+    return new Reservation(trainId, bookingRef, seats);
   }
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
  */
 public interface IProvideTrainTopology {
 
-  void sendReservation(String postContent);
+  void sendReservation(ReservationAttempt reservationAttempt);
 
-  Train getTrain(String trainId) throws IOException;
+  Train getTrain(TrainId trainId) throws IOException;
 }
